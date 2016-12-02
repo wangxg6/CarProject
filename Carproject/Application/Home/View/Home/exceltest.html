@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width"/>
+	<script src="_jquery.min.js"></script>
+	<link rel="shortcut icon" href="../toyota-icon.png">
+	<style>
+		form {
+			width: 250px;
+			margin: auto;
+			line-height: 30px;
+			border: 1px solid rgba(0,0,0,0.2);
+	    padding: 10px;
+	    border-radius: 8px;
+	    margin-top: 50px;
+		}
+
+		h3 {
+			text-align: center;
+    	margin: 0;
+		}
+
+		.submitbtn {
+			background-color: rgba(0,39,80,0.2);
+	    border-radius: 2px;
+	    display: inline-block;
+	    margin: 10px auto 0;
+		}
+
+		.result {
+			font-size: 12px;
+			margin: 50px auto;
+			text-align: center;
+			border-collapse:collapse;
+		}
+
+		.daochubtn {
+			align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+    background-color: rgba(0,39,80,0.2);
+    border-radius: 2px;
+    display: inline-block;
+    margin: 10px auto 0;
+    width: 40px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+    text-decoration: none;
+		}
+
+		.result,.result th,.result td
+  {
+  border: 1px solid black;
+  }
+	.changebtn {
+		align-items: flex-start;
+	text-align: center;
+	cursor: default;
+	color: buttontext;
+	background-color: buttonface;
+	box-sizing: border-box;
+	padding: 2px 6px 3px;
+	border-width: 2px;
+	border-style: outset;
+	border-color: buttonface;
+	border-image: initial;
+	background-color: rgba(0,39,80,0.2);
+	border-radius: 2px;
+	display: inline-block;
+	margin: 10px auto 0;
+	width: 70px;
+	font-size: 12px;
+	text-decoration: none;
+	}
+	.fonttitle {
+
+    font-size: 18px;
+    text-align: center;
+		}
+
+		.logo {
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+	<title>表单</title>
+</head>
+<body>
+			<div class="title">
+		<img src="toyota.jpeg" alt="" class="logo">
+		<h2 class="fonttitle">广州国际车展订单统计(11.19-11.27)</h2>
+	</div>
+		<form class="login" id="myform">
+			<h3>管理员数据导出</h3>
+			<table>
+				<tr>
+			<td>开始时间：</td><td><input type="text" name="starttime" id="starttime" placeholder="yyyy-mm-dd" value="2016-11-19"></td>
+			</tr>
+			<tr>
+			<td>结束时间：</td><td><input type="text" name="endtime" id="endtime" placeholder="yyyy-mm-dd" value="2016-11-27"></td>
+			</tr>
+		</table>
+		  <div style="text-align: center">
+			<input class="submitbtn" id="selectid" type="button" value="查询">
+			<input class="submitbtn" type="button" id="daochu" value="导出">
+		  </div>
+		</form>
+		<table class="result" id="resulttable">
+			<tr>
+				<td rowspan="2">id</td>
+				<td colspan="7">车展现场</td>
+				<td colspan="7">展厅</td>
+				<td rowspan="2">总和</td>
+			</tr>
+			<tr>
+				<td>凯美瑞</td>
+				<td>凯美瑞双擎</td>
+				<td>雷凌</td>
+				<td>雷凌双擎</td>
+				<td>致炫</td>
+				<td>汉兰达</td>
+				<td>逸致</td>
+				<td>凯美瑞</td>
+				<td>凯美瑞双擎</td>
+				<td>雷凌</td>
+				<td>雷凌双擎</td>
+				<td>致炫</td>
+				<td>汉兰达</td>
+				<td>逸致</td>
+			</tr>
+		</table>
+		<br/>
+			<hr/>
+			<div style="text-align: center">
+			<input type="button" id="changepassword" class="submitbtn" value="修改密码">
+			<input type="button" id="changeuser" class="submitbtn" value="切换用户">
+		  </div>
+		<script>
+		function clear(pn) {
+			while(pn.rows.length > 2) {
+				pn.deleteRow(-1);
+			}
+		}
+		function checklist() {
+			var url = 'http://gtmc.golp.cn/Carproject/Home/Main/select';
+			var starttime = document.getElementById('starttime');
+			var endtime = document.getElementById('endtime');
+			var resulttable = document.getElementById('resulttable');
+			clear(resulttable);
+			url = url + '?starttime=' + starttime.value;
+			url = url + '&endtime=' + endtime.value;
+			$.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'JSONP',
+				jsonp:'callback',
+        success: function (res) {
+					//var result = response.responseText;
+					//var res = JSON.parse(result);
+					var sum = new Array();
+					for(var i = 0;i < 16;i ++) {
+						sum.push(0);
+					}
+					for(var i = 0;i < res.length;i ++) {
+						var template = document.createElement('tr');
+						var ssum = 0;
+						var k = 0;
+						for(var x in res[i]){
+							if(x === 'time' || x === 'username' || x === 'id') {
+								continue;
+							}
+							if(x !== 'userid') {
+								ssum += parseInt(res[i][x]);
+								sum[k] += parseInt(res[i][x]);
+								k ++;
+							} else {
+								k ++;
+							}
+							var tem = document.createElement('td');
+							tem.innerHTML = res[i][x];
+							template.appendChild(tem);
+						}
+						sum[k] += ssum;
+						var tem = document.createElement('td');
+						tem.innerHTML = ssum;
+						template.appendChild(tem);
+						resulttable.appendChild(template);
+					}
+					sum[0] = '总计';
+					var template = document.createElement('tr');
+					for(var i = 0;i < sum.length;i ++) {
+						var tem = document.createElement('td');
+						tem.innerHTML = sum[i];
+						template.appendChild(tem);
+					}
+					resulttable.appendChild(template);
+				},
+				failure: function() {
+              alert('error');
+          }
+    	});
+			/*var xmlreq = new XMLHttpRequest();
+			xmlreq.open('GET', url);
+			xmlreq.send('');
+			xmlreq.onreadystatechange = function() {
+				if(xmlreq.readyState == 4 && xmlreq.status == 200) {
+					var result = xmlreq.response;
+					var res = JSON.parse(result);
+					var sum = new Array();
+					for(var i = 0;i < 16;i ++) {
+						sum.push(0);
+					}
+					for(var i = 0;i < res.length;i ++) {
+						var template = document.createElement('tr');
+						var ssum = 0;
+						var k = 0;
+						for(var x in res[i]){
+							if(x === 'time' || x === 'username' || x === 'id') {
+								continue;
+							}
+							if(x !== 'userid') {
+								ssum += parseInt(res[i][x]);
+								sum[k] += parseInt(res[i][x]);
+								k ++;
+							} else {
+								k ++;
+							}
+							var tem = document.createElement('td');
+							tem.innerHTML = res[i][x];
+							template.appendChild(tem);
+						}
+						sum[k] += ssum;
+						var tem = document.createElement('td');
+						tem.innerHTML = ssum;
+						template.appendChild(tem);
+						resulttable.appendChild(template);
+					}
+					sum[0] = '总计';
+					var template = document.createElement('tr');
+					for(var i = 0;i < sum.length;i ++) {
+						var tem = document.createElement('td');
+						tem.innerHTML = sum[i];
+						template.appendChild(tem);
+					}
+					resulttable.appendChild(template);
+				}
+			}*/
+		}
+		var selectid = document.getElementById('selectid');
+		selectid.addEventListener('click', checklist);
+
+		document.getElementById('daochu').addEventListener('click', function() {
+			var resulttable = document.getElementById('resulttable');
+			var ih = resulttable.innerHTML;
+			var ifr = document.createElement('iframe');
+			ifr.style.display = "none";
+    	ifr.src = 'table.html#' + ih;
+    	document.getElementById('myform').appendChild(ifr);
+		})
+
+		document.getElementById('changepassword').addEventListener('click', function() {
+			window.location.href="../../../../Home/User/change";
+		})
+		document.getElementById('changeuser').addEventListener('click', function() {
+			window.location.href="../../../../Home/User/logout";
+		})
+		/**
+		* 将html的table转成Excel的data协议类型数据，不支持ie
+*   table 是HTML DOM Document 对象
+× name 是sheet的名称
+*/
+
+
+
+		</script>
+</body>
+</html>

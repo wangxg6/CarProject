@@ -1,0 +1,1 @@
+<?php if (!defined('THINK_PATH')) exit();?><p>王先淦</p>

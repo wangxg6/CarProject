@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width"/>
+	<link rel="shortcut icon" href="../toyota-icon.png">
+	<style>
+		input {
+			font-size: 12px;
+		}
+
+		.blockarea {
+			border: 1px solid rgba(0,0,0,0.2);
+	    padding: 10px;
+	    border-radius: 8px;
+	    margin: 10px auto;
+	    line-height: 30px;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		.btn {
+			background-color: rgba(0,39,80,0.2);
+	    border-radius: 2px;
+	    display: inline-block;
+	    margin: 10px auto 0;
+		}
+
+		table {
+			text-align: right;
+		}
+
+		.changebtn {
+			align-items: flex-start;
+
+		}
+
+		.result {
+			font-size: 12px;
+			margin: 50px auto;
+			text-align: center;
+			border-collapse:collapse;
+			display: none;
+		}
+
+		.result,.result th,.result td
+  {
+  border: 1px solid black;
+  }
+	</style>
+	<title>表单</title>
+</head>
+<body>
+	<p align="center">广州国际车展订单统计，统计时间为11月19日-27日，统计各车型订单情况，提交截止时间为11月27日19:00前</p>
+	<div class="main">
+		<form action="../Main/submit" method="post" >
+			<div class="blockarea">
+				<h1 class="title">车展现场</h1>
+				<table>
+					<tr>
+					<td>凯美瑞：</td><td><input type="text" id="CAR10"></td>
+				</tr>
+				<tr>
+					<td>凯美瑞双擎：</td><td><input type="text" id="CAR20"></td>
+				</tr>
+				<tr>
+					<td>雷凌：</td><td><input type="text" id="CAR30"></td>
+					</tr>
+					<tr>
+					<td>雷凌双擎：</td><td><input type="text" id="CAR40"></td>
+					</tr>
+					<tr>
+					<td>致炫：</td><td><input type="text" id="CAR50"></td>
+					</tr>
+					<tr>
+					<td>汉兰达：</td><td><input type="text" id="CAR60"></td>
+					</tr>
+					<tr>
+					<td>逸致：</td><td><input type="text" id="CAR70"></td>
+				</tr>
+				</table>
+			</div>
+			<div class="blockarea">
+				<h1 class="title">展厅</h1>
+				<table>
+					<tr>
+					<td>凯美瑞：</td><td><input type="text" id="CAR11"></td>
+				</tr>
+				<tr>
+					<td>凯美瑞双擎：</td><td><input type="text" id="CAR21"></td>
+				</tr>
+				<tr>
+					<td>雷凌：</td><td><input type="text" id="CAR31"></td>
+					</tr>
+					<tr>
+					<td>雷凌双擎：</td><td><input type="text" id="CAR41"></td>
+					</tr>
+					<tr>
+					<td>致炫：</td><td><input type="text" id="CAR51"></td>
+					</tr>
+					<tr>
+					<td>汉兰达：</td><td><input type="text" id="CAR61"></td>
+					</tr>
+					<tr>
+					<td>逸致：</td><td><input type="text" id="CAR71"></td>
+				</tr>
+				</table>
+			</div>
+			<div style="text-align: center">
+			<input class="btn" type="submit" value="提交" id="submit" disabled>
+			<input class="btn" type="button" id="getfull" value="预览">
+			<input class="btn" id="changepassword" type="button" value="修改密码">
+			<input class="btn" id="changeuser" type="button" value="修改密码">
+			</div>
+		</form>
+		<table class="result" id="resulttable">
+			<tr>
+				<td colspan="7">车展现场</td>
+				<td colspan="7">展厅</td>
+			</tr>
+			<tr>
+				<td>凯美瑞</td>
+				<td>凯美瑞双擎</td>
+				<td>雷凌</td>
+				<td>雷凌双擎</td>
+				<td>致炫</td>
+				<td>汉兰达</td>
+				<td>逸致</td>
+				<td>凯美瑞</td>
+				<td>凯美瑞双擎</td>
+				<td>雷凌</td>
+				<td>雷凌双擎</td>
+				<td>致炫</td>
+				<td>汉兰达</td>
+				<td>逸致</td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		function clear(pn) {
+			while(pn.rows.length > 2) {
+				pn.deleteRow(-1);
+			}
+		}
+		document.getElementById('changepassword').addEventListener('click', function() {
+			window.location.href = "../User/change";
+		})
+		document.getElementById('changeuser').addEventListener('click', function() {
+			window.location.href = "../User/logout";
+		})
+		document.getElementById('getfull').addEventListener('click', function() {
+			document.getElementById('resulttable').style.display = "block";
+			clear(document.getElementById('resulttable'));
+			var arr = document.getElementsByTagName('input');
+			var template = document.createElement('tr');
+			for(var i = 0;i < 14;i ++) {
+				var tem = document.createElement('td');
+				tem.innerHTML = arr[i].value;
+				template.appendChild(tem);
+			}
+			document.getElementById('resulttable').appendChild(template);
+			document.getElementById('submit').disabled = false;
+		})
+	</script>
+</body>
+</html>

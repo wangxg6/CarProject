@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width"/>
+	<script src="_jquery.min.js"></script>
+	<link rel="shortcut icon" href="../toyota-icon.png">
+	<style>
+		form {
+			width: 200px;
+			margin: auto;
+			line-height: 30px;
+			border: 1px solid rgba(0,0,0,0.2);
+	    padding: 10px;
+	    border-radius: 8px;
+	    margin-top: 100px;
+		}
+
+		h3 {
+			text-align: center;
+    	margin: 0;
+		}
+
+		.submitbtn {
+			background-color: rgba(0,39,80,0.2);
+	    border-radius: 2px;
+	    display: block;
+	    margin: 10px auto 0;
+		}
+
+		.result {
+			font-size: 12px;
+			margin: 50px auto;
+			text-align: center;
+			border-collapse:collapse;
+			display: none;
+		}
+
+		.daochubtn {
+			align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+    background-color: rgba(0,39,80,0.2);
+    border-radius: 2px;
+    display: block;
+    margin: 10px auto 0;
+    width: 40px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+    text-decoration: none;
+		}
+
+		table,th, td
+  {
+  border: 1px solid black;
+  }
+	.changebtn {
+		align-items: flex-start;
+	text-align: center;
+	cursor: default;
+	color: buttontext;
+	background-color: buttonface;
+	box-sizing: border-box;
+	padding: 2px 6px 3px;
+	border-width: 2px;
+	border-style: outset;
+	border-color: buttonface;
+	border-image: initial;
+	background-color: rgba(0,39,80,0.2);
+	border-radius: 2px;
+	display: block;
+	margin: 10px auto 0;
+	width: 70px;
+	font-size: 12px;
+	text-decoration: none;
+	}
+	</style>
+	<title>表单</title>
+</head>
+<body>
+			<a class="daochubtn" id="daochu">导出</a>
+		<table class="result" id="resulttable">
+			<tr>
+				<td rowspan="2">id</td>
+				<td colspan="7">车展现场</td>
+				<td colspan="7">展厅</td>
+				<td rowspan="2">总和</td>
+			</tr>
+			<tr>
+				<td>凯</td>
+				<td>凯双</td>
+				<td>雷</td>
+				<td>雷双</td>
+				<td>致</td>
+				<td>汉</td>
+				<td>逸</td>
+				<td>凯</td>
+				<td>凯双</td>
+				<td>雷</td>
+				<td>雷双</td>
+				<td>致</td>
+				<td>汉</td>
+				<td>逸</td>
+			</tr>
+		</table>
+		<script>
+		/**
+		* 将html的table转成Excel的data协议类型数据，不支持ie
+*   table 是HTML DOM Document 对象
+× name 是sheet的名称
+*/
+var tableToExcel = (function() {
+	var uri = 'data:application/vnd.ms-excel;base64,',
+	template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'
+									 + '<head><meta http-equiv="Content-type" content="text/html;charset=UTF-8" /><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>'
+									 + '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+	base64 = function(s) {
+			return window.btoa(unescape(encodeURIComponent(s)))
+	},
+	format = function(s, c) {
+			return s.replace(/{(\w+)}/g, function(m, p) {
+					return c[p];
+			})
+	};
+	return function(table, name) {
+			var ctx = {
+					worksheet : name || 'Worksheet',
+					table : table.innerHTML
+			}
+			return uri + base64(format(template, ctx));
+	}
+})();
+
+$(function(){
+	var ih = window.location.hash;
+	ih = ih.substring(1);
+			document.getElementById('resulttable').innerHTML = ih;
+	$('#daochu').on('click', function(){
+		var $this = $(this);
+		var excelname = '统计.xls';
+		//设定下载的文件名及后缀
+		$this.attr('download', excelname);
+		//设定下载内容
+		$this.attr('href', tableToExcel($('#resulttable')[0]));
+	});
+	document.getElementById('daochu').click();
+});
+
+
+		</script>
+</body>
+</html>
